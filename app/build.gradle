@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'de.undercouch.download'
 
 android {
     compileSdkVersion 26
@@ -16,13 +17,43 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    sourceSets {
+        main {
+            assets.srcDirs = ['./assets']
+        }
+    }
 }
+
+
+import de.undercouch.gradle.tasks.download.Download
+task downloadFile(type: Download) {
+    src 'https://storage.googleapis.com/download.tensorflow.org/models/inception5h.zip'
+    dest projectDir.toString() + '/../../assets/inception.zip'
+}
+task unzip(type: Copy) {
+    from zipTree(projectDir.toString() + '/../../assets/inception.zip')
+    into file(projectDir.toString() + '/assets')
+}
+unzip.dependsOn downloadFile
+
+project.afterEvaluate {
+    if (!(new File(projectDir.toString() + '/assets')).exists()) {
+        preBuild.dependsOn unzip
+    }
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    implementation 'org.tensorflow:tensorflow-android:1.2.0'
     compileOnly 'com.google.android.things:androidthings:+'
 }

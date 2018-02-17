@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">NeuralCandy</string>
+    <string name="textview">Tap to Start</string>
+</resources>

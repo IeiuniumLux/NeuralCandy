@@ -18,3 +18,4 @@ NeuralCandy uses the  [TensorFlow Lite](https://github.com/tensorflow/tensorflow
   - [SmartiPi Case](https://www.adafruit.com/product/3576)
   - [16GB microSD card](https://www.amazon.com/gp/product/B010Q57SEE/ref=ox_sc_act_title_2?smid=ATVPDKIKX0DER&psc=1)
   - [Mini Candy Dispenser](https://www.amazon.com/gp/product/B00RM5UQP0/ref=ox_sc_act_title_1?smid=A25PA0SPA3UQ4X&psc=1)
+- Install Android Things on the Raspberry Pi 3 (flashing instructions [here](https://developer.android.com/things/hardware/raspberrypi.html))

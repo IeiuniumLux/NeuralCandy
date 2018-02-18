@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">NeuralCandy</string>
     <string name="textview">Tap to Start</string>
+    <string name="initializing">Initializing…</string>
+    <string name="help_message">Press the button to take a picture</string>
+    <string name="empty_result">I don\'t understand what I see</string>
 </resources>

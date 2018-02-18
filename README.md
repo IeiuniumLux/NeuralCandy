@@ -12,7 +12,7 @@ The dispenser uses a [Raspberry Pi 3 model B](https://www.raspberrypi.org/produc
   - [Raspberry Pi Camera Board v2](https://www.adafruit.com/product/3099)
   - [5V 2.4A Power Supply](https://www.adafruit.com/product/1995)
   - [USB to TTL Serial Cable](https://www.adafruit.com/product/954)
-  - [Lens Adjustment Tool (optional)](https://www.adafruit.com/product/3518)
+  - [Lens Adjustment Tool](https://www.adafruit.com/product/3518)(optional)
   - [Pimoroni Explorer pHAT](https://www.adafruit.com/product/3018)
   - [7" Touchscreen Display](https://www.adafruit.com/product/2718)
   - [SmartiPi Case](https://www.adafruit.com/product/3576)

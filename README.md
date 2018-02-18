@@ -4,7 +4,7 @@ The NeuralCandy project combines image classifier and sugar highs in one delicio
 
 NeuralCandy uses the  [TensorFlow Lite](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/lite#tensorflow-lite) inference library for Android to locally classify the captured image against a pre-trained [ImageNet](http://image-net.org/) model; and the [Raspberry Pi 3 model B](https://developer.android.com/things/hardware/raspberrypi.html) is used to handles both the image processing and the motor for the candy release.
 
-> Note that the Android Things project is still in the developer preview stage for early adopters to use for testing. NeuralCandy uses the [preview 6.1 release](https://developer.android.com/things/preview/releases.html#preview-6-1); which may still have some stability issues.  One of them is that you have to reboot the Raspberry Pi after installing the app because the camera permission requested by the app is not granted until the next device reboot.
+> Note that the Android Things project is still in the developer preview stage for early adopters to use for testing. NeuralCandy is currently built on the [preview 6.1 release](https://developer.android.com/things/preview/releases.html#preview-6-1); which may still have some stability issues.  One of them is that you have to reboot the Raspberry Pi after installing the app because the camera permission requested by the app is not granted until the next device reboot.
 
 ## What you'll need
 

@@ -1,12 +1,12 @@
 # NeuralCandy
 
-The Neural Candy Dispenser combines image classifier and sugar highs in one delicious [Android Things](https://developer.android.com/things/get-started/index.html) project.
+The NeuralCandy project combines image classifier and sugar highs in one delicious [Android Things](https://developer.android.com/things/get-started/index.html) project. The application asks for a random animal image (e.g. a cat or a dog) to be placed in front of the onboard [camera module](https://www.raspberrypi.org/products/camera-module-v2/) and if it matches the requested animal; then the motor of the candy dispenser is activated to releases the delicious reward.
 
-The dispenser uses a [Raspberry Pi 3 model B](https://www.raspberrypi.org/products/raspberry-pi-3-model-b/) to control both the image detection and the candy release. The application asks for a random animal image (e.g. a cat or a dog) to be placed in front of the onboard [camera module](https://www.raspberrypi.org/products/camera-module-v2/) and if it matches the requested animal; then the motor of the candy machine is activated to releases the delicious reward.
+NeuralCandy uses the  TensorFlow Lite inference library for Android to locally classify the captured image against a pre-trained ImageNet model, and the [Raspberry Pi 3 model B](https://www.raspberrypi.org/products/raspberry-pi-3-model-b/) handles both the image detection and the candy release. 
 
-## Prerequisites
+## What you'll need
 
-- [Android Studio IDE](https://developer.android.com/studio/index.html)
+- [Android Studio 3.0+](https://developer.android.com/studio/index.html)
 - The following individual components:
   - [Raspberry Pi 3 Model B](https://www.adafruit.com/product/3055)
   - [Raspberry Pi Camera Board v2](https://www.adafruit.com/product/3099)

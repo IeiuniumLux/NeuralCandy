@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.things.pio.Gpio;
 import com.google.android.things.pio.PeripheralManagerService;
 
 import org.tensorflow.lite.Interpreter;
@@ -23,9 +22,8 @@ import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Random;
 
 /**
  * Android Things activity.
@@ -58,7 +56,6 @@ public class MainActivity extends Activity {
     private static final String LABELS_FILE = "labels.txt";
     private static final String MODEL_FILE = "mobilenet_quant_v1_224.tflite";
 
-
     private AnimationDrawable mAnimation;
     private ImageView mImgView;
     private TextView mTextInfo;
@@ -67,12 +64,12 @@ public class MainActivity extends Activity {
     private List<String> mLabels;
     private CameraHandler mCameraHandler;
     private ImagePreprocessor mImagePreprocessor;
+    private String mCurrentTarget;
 
-    public static final List<String> LABELS = Arrays.asList("DOG",
-            "CAT","FISH","SHEEP","COW","BEE","LION","PENGUIN","BIRD",
-            "RABBIT","ELEPHANT","FLOWER");
+    public static final List<String> TARGETS = Arrays.asList("TRILOBITE","AXOLOTL","TRICERATOPS",
+            "GOLDFISH","PORCUPINE","ZEBRA","STARFISH","PLATYPUS","TOUCAN","TERRAPIN","CRAB","DAISY");
 
-    private Map<String, Gpio> mGpioMap = new LinkedHashMap<>();
+//    public static final List<String> TARGETS = Arrays.asList("LION","CAT","DOG","BEE","ZEBRA");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,32 +79,52 @@ public class MainActivity extends Activity {
         mImgView = (ImageView) findViewById(R.id.image);
         mTextInfo = (TextView) findViewById(R.id.textInfo);
 
+        final CountDownTimer timer = new CountDownTimer(45000, 1000) {
+            public void onTick(long millisUntilFinished) {
+
+            }
+            public void onFinish() {
+                mImgView.setImageResource(R.drawable.ic_start);
+                updateStatus(getString(R.string.start_message));
+            }
+        };
+
         mImgView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
-                final ImageView img = (ImageView) view;
+                final ImageView imgView = (ImageView) view;
+
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (img.getDrawable().getConstantState().equals
-                            (img.getContext().getDrawable(R.drawable.ic_start).getConstantState())) {
-                        img.setImageResource(R.drawable.ic_camera);
-                        mTextInfo.setText("Processing...");
-                    } else if (img.getDrawable().getConstantState().equals
-                            (img.getContext().getDrawable(R.drawable.ic_camera).getConstantState())) {
-                        img.setImageResource(R.drawable.animation);
-                        mAnimation = (AnimationDrawable) img.getDrawable();
-                        mAnimation.start();
-                        new CountDownTimer(5000, 1000) {
-
-                            public void onTick(long millisUntilFinished) {
-                                mTextInfo.setText("Analyzing... " + millisUntilFinished / 1000);
-                            }
-
-                            public void onFinish() {
-                                mAnimation.stop();
-                                img.setImageResource(R.drawable.ic_thumb_up);
-                                mTextInfo.setText("done!");
-                            }
-                        }.start();
+                    if (imgView.getDrawable().getConstantState().equals
+                            (imgView.getContext().getDrawable(R.drawable.ic_start).getConstantState())) {
+                        mCurrentTarget = randomAnimal();
+                        imgView.setImageResource(R.drawable.ic_camera);
+                        updateStatus(getString(R.string.request, mCurrentTarget));
+                        timer.start();
+                    } else if (imgView.getDrawable().getConstantState().equals
+                            (imgView.getContext().getDrawable(R.drawable.ic_camera).getConstantState())) {
+                        if (timer != null)
+                            timer.cancel();
+                        takePhoto();
+                        timer.start();
+//                        imgView.setImageResource(R.drawable.animation);
+//                        mAnimation = (AnimationDrawable) imgView.getDrawable();
+//                        mAnimation.start();
+//                        new CountDownTimer(5000, 1000) {
+//
+//                            public void onTick(long millisUntilFinished) {
+//                                mTextInfo.setText("Analyzing... " + millisUntilFinished / 1000);
+//                            }
+//
+//                            public void onFinish() {
+//                                mAnimation.stop();
+//                                imgView.setImageResource(R.drawable.ic_thumb_up);
+//                                mTextInfo.setText("done!");
+//                            }
+//                        }.start();
+                    } else {
+                        imgView.setImageResource(R.drawable.ic_start);
+                        updateStatus(getString(R.string.start_message));
                     }
                 }
                 return true;
@@ -151,20 +168,38 @@ public class MainActivity extends Activity {
 //                button.setEnabled(false);
 //            }
 //        }
+
+        updateStatus(getString(R.string.initializing));
+        initCamera();
+        initClassifier();
+//        initButton();
+        updateStatus(getString(R.string.start_message));
+    }
+
+    private String randomAnimal(){
+        String newLabel;
+        Random random = new Random();
+        do {
+            int idx = random.nextInt(TARGETS.size());
+            newLabel = TARGETS.get(idx);
+        } while (newLabel == mCurrentTarget);
+
+        return newLabel;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        for (Map.Entry<String, Gpio> entry : mGpioMap.entrySet()) {
-            try {
-                entry.getValue().close();
-            } catch (IOException e) {
-                Log.e(TAG, "Error closing GPIO " + entry.getKey(), e);
-            }
+        try {
+            destroyClassifier();
+        } catch (Throwable t) {
+            // close quietly
         }
-        mGpioMap.clear();
+        try {
+            closeCamera();
+        } catch (Throwable t) {
+            // close quietly
+        }
     }
 
     private void updateStatus(String status) {
@@ -219,6 +254,10 @@ public class MainActivity extends Activity {
             int counter = 0;
             while (it.hasNext()) {
                 Recognition r = it.next();
+                if (r.getTitle().equalsIgnoreCase(mCurrentTarget)) {
+                    mImgView.setImageResource(R.drawable.ic_thumb_up);
+                    return "Won!";
+                }
                 sb.append(r.getTitle());
                 counter++;
                 if (counter < results.size() - 1) {
@@ -227,7 +266,7 @@ public class MainActivity extends Activity {
                     sb.append(" or ");
                 }
             }
-
+            mImgView.setImageResource(R.drawable.ic_thumb_down);
             return sb.toString();
         }
     }
@@ -293,7 +332,7 @@ public class MainActivity extends Activity {
      * Load the image that will be used in the classification process.
      * When done, the method {@link #onPhotoReady(Bitmap)} must be called with the image.
      */
-    private void loadPhoto() {
+    private void takePhoto() {
         mCameraHandler.takePicture();
     }
 }

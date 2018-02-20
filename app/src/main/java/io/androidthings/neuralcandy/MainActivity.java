@@ -105,11 +105,12 @@ public class MainActivity extends Activity {
                             (imgView.getContext().getDrawable(R.drawable.ic_camera).getConstantState())) {
                         if (timer != null)
                             timer.cancel();
+
+                        imgView.setImageResource(R.drawable.animation);
+                        mAnimation = (AnimationDrawable) imgView.getDrawable();
+                        mAnimation.start();
                         takePhoto();
                         timer.start();
-//                        imgView.setImageResource(R.drawable.animation);
-//                        mAnimation = (AnimationDrawable) imgView.getDrawable();
-//                        mAnimation.start();
 //                        new CountDownTimer(5000, 1000) {
 //
 //                            public void onTick(long millisUntilFinished) {
@@ -123,6 +124,8 @@ public class MainActivity extends Activity {
 //                            }
 //                        }.start();
                     } else {
+                        if (timer != null)
+                            timer.cancel();
                         imgView.setImageResource(R.drawable.ic_start);
                         updateStatus(getString(R.string.start_message));
                     }
@@ -230,7 +233,7 @@ public class MainActivity extends Activity {
      * Image capture process complete
      */
     private void onPhotoReady(Bitmap bitmap) {
-        mImgView.setImageBitmap(bitmap);
+//        mImgView.setImageBitmap(bitmap);
         doRecognize(bitmap);
     }
 
@@ -256,7 +259,7 @@ public class MainActivity extends Activity {
                 Recognition r = it.next();
                 if (r.getTitle().equalsIgnoreCase(mCurrentTarget)) {
                     mImgView.setImageResource(R.drawable.ic_thumb_up);
-                    return "Won!";
+                    return "It matches!";
                 }
                 sb.append(r.getTitle());
                 counter++;
@@ -266,8 +269,9 @@ public class MainActivity extends Activity {
                     sb.append(" or ");
                 }
             }
-            mImgView.setImageResource(R.drawable.ic_thumb_down);
-            return sb.toString();
+            mImgView.setImageResource(R.drawable.ic_sorry);
+//            return sb.toString();
+            return getString(R.string.empty_result);
         }
     }
 
@@ -299,6 +303,7 @@ public class MainActivity extends Activity {
 
         // Get the results with the highest confidence and map them to their labels
         Collection<Recognition> results = TensorFlowHelper.getBestResults(confidencePerLabel, mLabels);
+
         // Report the results with the highest confidence
         onPhotoRecognitionReady(results);
     }

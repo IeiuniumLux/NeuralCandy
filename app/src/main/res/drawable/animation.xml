@@ -6,4 +6,7 @@
     <item
         android:drawable="@drawable/ic_processing_2"
         android:duration="400"/>
+    <item
+        android:drawable="@drawable/ic_processing_3"
+        android:duration="400"/>
 </animation-list>

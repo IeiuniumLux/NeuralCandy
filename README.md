@@ -24,4 +24,5 @@ NeuralCandy uses the  [TensorFlow Lite](https://github.com/tensorflow/tensorflow
 
 ## References
 - https://github.com/googlecodelabs/androidthings-imageclassifier
+- https://github.com/androidthings/sample-simpleui/tree/master/app
 - https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/lite

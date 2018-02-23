@@ -13,7 +13,7 @@ NeuralCandy uses the  [TensorFlow Lite](https://github.com/tensorflow/tensorflow
   - [Raspberry Pi 3 Model B](https://www.adafruit.com/product/3055)
   - [Raspberry Pi Camera Board v2](https://www.adafruit.com/product/3099)
   - [5V 2.4A Power Supply](https://www.adafruit.com/product/1995)
-  - [Pimoroni Explorer pHAT](https://www.adafruit.com/product/3018) or [L9110 Breakout Board](https://www.ebay.com/sch/i.html?_from=R40&_trksid=p2047675.m570.l1313.TR0.TRC0.H0.XL9110+5V+Fan+Motor+Module.TRS5&_nkw=L9110+5V+Fan+Motor+Module&_sacat=0)
+  - [Pimoroni Explorer pHAT](https://www.adafruit.com/product/3018) or [L9110 Breakout Board](https://www.ebay.com/sch/i.html?_from=R40&_sacat=0&_nkw=L9110+5V+Fan+Motor+Module&_sop=15)
   - [7" Touchscreen Display](https://www.adafruit.com/product/2718)
   - [SmartiPi Case](https://www.adafruit.com/product/3576)
   - [USB to TTL Serial Cable](https://www.adafruit.com/product/954) (optional)

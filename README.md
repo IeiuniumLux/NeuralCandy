@@ -13,7 +13,7 @@ NeuralCandy uses the  [TensorFlow Lite](https://github.com/tensorflow/tensorflow
   - [Raspberry Pi 3 Model B](https://www.adafruit.com/product/3055)
   - [Raspberry Pi Camera Board v2](https://www.adafruit.com/product/3099)
   - [5V 2.4A Power Supply](https://www.adafruit.com/product/1995)
-  - [USB to TTL Serial Cable](https://www.adafruit.com/product/954)
+  - [USB to TTL Serial Cable](https://www.adafruit.com/product/954) (optional)
   - [Lens Adjustment Tool](https://www.adafruit.com/product/3518) (optional)
   - [Pimoroni Explorer pHAT](https://www.adafruit.com/product/3018)
   - [7" Touchscreen Display](https://www.adafruit.com/product/2718)

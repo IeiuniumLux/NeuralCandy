@@ -13,7 +13,7 @@ NeuralCandy uses the  [TensorFlow Lite](https://github.com/tensorflow/tensorflow
   - [Raspberry Pi 3 Model B](https://www.adafruit.com/product/3055)
   - [Raspberry Pi Camera Board v2](https://www.adafruit.com/product/3099)
   - [5V 2.4A Power Supply](https://www.adafruit.com/product/1995)
-  - [Pimoroni Explorer pHAT](https://www.adafruit.com/product/3018)
+  - [Pimoroni Explorer pHAT](https://www.adafruit.com/product/3018) or [L9110 Breakout Board](https://www.ebay.com/sch/i.html?_from=R40&_trksid=p2047675.m570.l1313.TR0.TRC0.H0.XL9110+5V+Fan+Motor+Module.TRS5&_nkw=L9110+5V+Fan+Motor+Module&_sacat=0)
   - [7" Touchscreen Display](https://www.adafruit.com/product/2718)
   - [SmartiPi Case](https://www.adafruit.com/product/3576)
   - [USB to TTL Serial Cable](https://www.adafruit.com/product/954) (optional)
@@ -22,7 +22,7 @@ NeuralCandy uses the  [TensorFlow Lite](https://github.com/tensorflow/tensorflow
   - [Mini Candy Dispenser](https://www.amazon.com/gp/product/B00RM5UQP0/ref=ox_sc_act_title_1?smid=A25PA0SPA3UQ4X&psc=1)
 - Install Android Things on the Raspberry Pi 3 (flashing instructions [here](https://developer.android.com/things/hardware/raspberrypi.html))
 
-## Why do I need the Explorer pHat?
+## Why do I need a motor driver?
 The Raspberry Pi's GPIO ports can only supply a few mA of current (16mA max). Attempting to draw more than this will damage the Pi. Motors typically require at least 400mA to start spinning (although they draw far less after startup).  Motor drivers are often H-Bridge circuits, capable of driving a motor forwards or backwards. The Explorer pHAT has an H-Bridge and circuitry that makes the controlling of the motor easier.
 
 ## References

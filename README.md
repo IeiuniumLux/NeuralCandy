@@ -22,7 +22,7 @@ NeuralCandy uses the  [TensorFlow Lite](https://github.com/tensorflow/tensorflow
   - [Mini Candy Dispenser](https://www.amazon.com/gp/product/B00RM5UQP0/ref=ox_sc_act_title_1?smid=A25PA0SPA3UQ4X&psc=1)
 - Install Android Things on the Raspberry Pi 3 (flashing instructions [here](https://developer.android.com/things/hardware/raspberrypi.html))
 
-## Why do I need a motor driver?
+### Why do I need a motor driver?
 The Raspberry Pi's GPIO ports can only supply a few mA of current (16mA max). Attempting to draw more than this will damage the Pi. Motors typically require at least 400mA to start spinning (although they draw far less after startup).  Motor drivers are often H-Bridge circuits, capable of driving a motor forwards or backwards. The Explorer pHAT has an H-Bridge and circuitry that makes the controlling of the motor easier.
 
 ## References

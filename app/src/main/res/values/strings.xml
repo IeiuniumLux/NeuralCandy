@@ -2,6 +2,6 @@
     <string name="app_name">NeuralCandy</string>
     <string name="initializing">Initializing…</string>
     <string name="start_message">Tap to Start</string>
-    <string name="empty_result">I don\'t recognize that.\nTap to try another target.</string>
+    <string name="empty_result">I don\'t recognize that.\nTap to try another one.</string>
     <string name="request">Show a %1$s to the camera and tab the screen</string>
 </resources>

@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="com.google.android.things.permission.MODIFY_SCREEN_SETTINGS"/>
 
     <application>
         <uses-library android:name="com.google.android.things" />

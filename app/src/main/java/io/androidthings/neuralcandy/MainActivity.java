@@ -7,11 +7,13 @@ import android.media.ImageReader;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.things.device.ScreenManager;
 import com.google.android.things.pio.Gpio;
 import com.google.android.things.pio.PeripheralManagerService;
 
@@ -23,9 +25,7 @@ import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 /**
@@ -44,24 +44,30 @@ import java.util.Random;
  */
 public class MainActivity extends Activity {
 
+    public static final List<String> THINGS = Arrays.asList("TRILOBITE", "AXOLOTL", "TRICERATOPS",
+            "GOLDFISH", "PORCUPINE", "ZEBRA", "STARFISH", "PLATYPUS", "TOUCAN", "TERRAPIN", "LOBSTER", "DAISY");
     private static final String TAG = MainActivity.class.getSimpleName();
-
-    /** Camera image capture size */
+    /**
+     * Camera image capture size
+     */
     private static final int PREVIEW_IMAGE_WIDTH = 640;
     private static final int PREVIEW_IMAGE_HEIGHT = 480;
-    /** Image dimensions required by TF model */
+    /**
+     * Image dimensions required by TF model
+     */
     private static final int TF_INPUT_IMAGE_WIDTH = 224;
     private static final int TF_INPUT_IMAGE_HEIGHT = 224;
-    /** Dimensions of model inputs. */
+    /**
+     * Dimensions of model inputs.
+     */
     private static final int DIM_BATCH_SIZE = 1;
     private static final int DIM_PIXEL_SIZE = 3;
-    /** TF model asset files */
+    /**
+     * TF model asset files
+     */
     private static final String LABELS_FILE = "labels.txt";
     private static final String MODEL_FILE = "mobilenet_quant_v1_224.tflite";
-
-    private static final String MOTOR_1_POS = "BCM19";
     private static final String MOTOR_1_NEG = "BCM20";
-
     private AnimationDrawable mAnimation;
     private ImageView mImgView;
     private TextView mTextInfo;
@@ -71,28 +77,30 @@ public class MainActivity extends Activity {
     private CameraHandler mCameraHandler;
     private ImagePreprocessor mImagePreprocessor;
     private String mCurrentTarget;
-    private Map<String, Gpio> mGpioMap = new LinkedHashMap<>();
-
-    public static final List<String> THINGS = Arrays.asList("TRILOBITE","AXOLOTL","TRICERATOPS",
-            "GOLDFISH","PORCUPINE","ZEBRA","STARFISH","PLATYPUS","TOUCAN","TERRAPIN","LOBSTER","DAISY");
+    // GPIO connection to Motor output
+    private Gpio mMotorGpio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ScreenManager screenManager = new ScreenManager(Display.DEFAULT_DISPLAY);
+        screenManager.setBrightnessMode(ScreenManager.BRIGHTNESS_MODE_MANUAL);
+        screenManager.setBrightness(255); //Max it out.
+//        screenManager.lockRotation(ScreenManager.ROTATION_0);
+
         PeripheralManagerService pioService = new PeripheralManagerService();
-        Log.d(TAG, "Available GPIO: " + pioService.getGpioList());
+//        Log.d(TAG, "Available GPIO: " + pioService.getGpioList());
 
         try {
-            final Gpio motorPosPin = pioService.openGpio(MOTOR_1_POS);
-            motorPosPin.setEdgeTriggerType(Gpio.EDGE_NONE);
-            motorPosPin.setActiveType(Gpio.ACTIVE_HIGH);
+            mMotorGpio = pioService.openGpio(MOTOR_1_NEG);
+//            mMotorGpio.setEdgeTriggerType(Gpio.EDGE_NONE);
+            mMotorGpio.setActiveType(Gpio.ACTIVE_HIGH);
             // Configure as an output
-            motorPosPin.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW);
-            mGpioMap.put(MOTOR_1_POS, motorPosPin);
+            mMotorGpio.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW);
         } catch (IOException e) {
-                Log.e(TAG, "Error initializing GPIO: " + MOTOR_1_POS, e);
+            Log.e(TAG, "Error initializing GPIO: " + MOTOR_1_NEG, e);
         }
 
         mImgView = (ImageView) findViewById(R.id.image);
@@ -102,6 +110,7 @@ public class MainActivity extends Activity {
             public void onTick(long millisUntilFinished) {
 
             }
+
             public void onFinish() {
                 mImgView.setImageResource(R.drawable.ic_start);
                 updateStatus(getString(R.string.start_message));
@@ -115,8 +124,9 @@ public class MainActivity extends Activity {
                 final ImageView imgView = (ImageView) view;
 
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (imgView.getDrawable().getConstantState().equals
-                            (imgView.getContext().getDrawable(R.drawable.ic_start).getConstantState())) {
+                    if ((imgView.getDrawable().getConstantState().equals
+                            (imgView.getContext().getDrawable(R.drawable.ic_start).getConstantState())) || (imgView.getDrawable().getConstantState().equals
+                            (imgView.getContext().getDrawable(R.drawable.ic_sorry).getConstantState()))) {
                         mCurrentTarget = randomAnimal();
                         imgView.setImageResource(R.drawable.ic_camera);
                         updateStatus(getString(R.string.request, mCurrentTarget));
@@ -132,76 +142,40 @@ public class MainActivity extends Activity {
                         mProcessing = true;
                         takePhoto();
                         timer.start();
-//                        new CountDownTimer(5000, 1000) {
-//
-//                            public void onTick(long millisUntilFinished) {
-//                                mTextInfo.setText("Analyzing... " + millisUntilFinished / 1000);
-//                            }
-//
-//                            public void onFinish() {
-//                                mAnimation.stop();
-//                                imgView.setImageResource(R.drawable.ic_thumb_up);
-//                                mTextInfo.setText("done!");
-//                            }
-//                        }.start();
                     } else if (imgView.getDrawable().getConstantState().equals
-                            (imgView.getContext().getDrawable(R.drawable.ic_sorry).getConstantState())) {
-
-                    } else {
-                        if (timer != null)
+                            (imgView.getContext().getDrawable(R.drawable.ic_thumb_up).getConstantState())) {
+                        try {
                             timer.cancel();
-                        imgView.setImageResource(R.drawable.ic_start);
-                        updateStatus(getString(R.string.start_message));
+                            mMotorGpio.setValue(true);
+                            new CountDownTimer(2000, 1000) {
+                                public void onTick(long millisUntilFinished) {
+//                                    mTextInfo.setText("Candy countdown: " + millisUntilFinished / 1000);
+                                }
+
+                                public void onFinish() {
+                                    mImgView.setImageResource(R.drawable.ic_start);
+                                    updateStatus(getString(R.string.start_message));
+                                    mProcessing = false;
+                                    try {
+                                        mMotorGpio.setValue(false);
+                                    } catch (IOException e) {
+                                        Log.e(TAG, "error toggling gpio off:", e);
+                                    }
+                                }
+                            }.start();
+                        } catch (IOException e) {
+                            Log.e(TAG, "error toggling gpio on:", e);
+                        }
+
                     }
                 }
                 return true;
             }
         });
 
-
-
-
-
-//        for (String name : pioService.getGpioList()) {
-//            View child = inflater.inflate(R.layout.list_item_gpio, gpioPinsView, false);
-//            Switch button = (Switch) child.findViewById(R.id.gpio_switch);
-//            button.setText(name);
-//            gpioPinsView.addView(button);
-//            Log.d(TAG, "Added button for GPIO: " + name);
-//
-//            try {
-//                final Gpio motorPin = pioService.openGpio(name);
-//                motorPin.setEdgeTriggerType(Gpio.EDGE_NONE);
-//                motorPin.setActiveType(Gpio.ACTIVE_HIGH);
-//                motorPin.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW);
-//
-//                button.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-//                    @Override
-//                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-//                        try {
-//                            motorPin.setValue(isChecked);
-//                        } catch (IOException e) {
-//                            Log.e(TAG, "error toggling gpio:", e);
-//                            buttonView.setOnCheckedChangeListener(null);
-//                            // reset button to previous state.
-//                            buttonView.setChecked(!isChecked);
-//                            buttonView.setOnCheckedChangeListener(this);
-//                        }
-//                    }
-//                });
-//
-//                mGpioMap.put(name, motorPin);
-//            } catch (IOException e) {
-//                Log.e(TAG, "Error initializing GPIO: " + name, e);
-//                // disable button
-//                button.setEnabled(false);
-//            }
-//        }
-
         updateStatus(getString(R.string.initializing));
         initCamera();
         initClassifier();
-//        initButton();
         updateStatus(getString(R.string.start_message));
     }
 
@@ -209,14 +183,13 @@ public class MainActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
 
-        for (Map.Entry<String, Gpio> gpio : mGpioMap.entrySet()) {
+        if (mMotorGpio != null) {
             try {
-                gpio.getValue().close();
+                mMotorGpio.close();
             } catch (IOException e) {
-                Log.e(TAG, "Error closing GPIO " + gpio.getKey(), e);
+                Log.e(TAG, "Error closing GPIO", e);
             }
         }
-        mGpioMap.clear();
 
         try {
             destroyClassifier();
@@ -226,7 +199,7 @@ public class MainActivity extends Activity {
         }
     }
 
-    private String randomAnimal(){
+    private String randomAnimal() {
         String newLabel;
         Random random = new Random();
         do {
@@ -272,44 +245,28 @@ public class MainActivity extends Activity {
     /**
      * Image classification process complete
      */
-    private void onPhotoRecognitionReady(Collection<Recognition> results) {
-        updateStatus(formatResults(results));
-        mProcessing = false;
-    }
-
-    /**
-     * Format results list for display
-     */
-    private String formatResults(Collection<Recognition> results) {
+    private void onClassificationComplete(Collection<Recognition> results) {
         if (results == null || results.isEmpty()) {
-            return getString(R.string.empty_result);
+            updateStatus(getString(R.string.empty_result));
         } else {
-//            int counter = 0;
-//            StringBuilder sb = new StringBuilder();
             Iterator<Recognition> it = results.iterator();
             while (it.hasNext()) {
                 Recognition r = it.next();
-                if (r.getTitle().equalsIgnoreCase(mCurrentTarget)) {
+                if (r.getTitle().toLowerCase().contains(mCurrentTarget.toLowerCase())) {
                     mImgView.setImageResource(R.drawable.ic_thumb_up);
-                    return "It matches!";
+                    updateStatus("It matches!  Tap to claim your candy.");
+                    return;
                 }
-//                sb.append(r.getTitle());
-//                counter++;
-//                if (counter < results.size() - 1) {
-//                    sb.append(", ");
-//                } else if (counter == results.size() - 1) {
-//                    sb.append(" or ");
-//                }
             }
             mImgView.setImageResource(R.drawable.ic_sorry);
-//            return sb.toString();
-            return getString(R.string.empty_result);
+            updateStatus(getString(R.string.empty_result));
+            mProcessing = false;
         }
     }
 
     /**
      * Process an image and identify what is in it. When done, the method
-     * {@link #onPhotoRecognitionReady(Collection)} must be called with the results of
+     * {@link #onClassificationComplete(Collection)} must be called with the results of
      * the image recognition process.
      *
      * @param image Bitmap containing the image to be classified. The image can be
@@ -337,7 +294,7 @@ public class MainActivity extends Activity {
         Collection<Recognition> results = TensorFlowHelper.getBestResults(confidencePerLabel, mLabels);
 
         // Report the results with the highest confidence
-        onPhotoRecognitionReady(results);
+        onClassificationComplete(results);
     }
 
     /**

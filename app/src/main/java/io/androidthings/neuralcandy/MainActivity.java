@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.things.device.ScreenManager;
-import com.google.android.things.pio.Gpio;
 import com.google.android.things.pio.PeripheralManagerService;
 
 import org.tensorflow.lite.Interpreter;
@@ -44,9 +43,11 @@ import java.util.Random;
  */
 public class MainActivity extends Activity {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     public static final List<String> THINGS = Arrays.asList("TRILOBITE", "AXOLOTL", "TRICERATOPS",
             "GOLDFISH", "PORCUPINE", "ZEBRA", "STARFISH", "PLATYPUS", "TOUCAN", "TERRAPIN", "LOBSTER", "DAISY");
-    private static final String TAG = MainActivity.class.getSimpleName();
+
     /**
      * Camera image capture size
      */
@@ -77,8 +78,7 @@ public class MainActivity extends Activity {
     private CameraHandler mCameraHandler;
     private ImagePreprocessor mImagePreprocessor;
     private String mCurrentTarget;
-    // GPIO connection to Motor output
-    private Gpio mMotorGpio;
+    private CandyMachine mCandyMachine;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,16 +93,7 @@ public class MainActivity extends Activity {
         PeripheralManagerService pioService = new PeripheralManagerService();
 //        Log.d(TAG, "Available GPIO: " + pioService.getGpioList());
 
-        try {
-            mMotorGpio = pioService.openGpio(MOTOR_1_NEG);
-//            mMotorGpio.setEdgeTriggerType(Gpio.EDGE_NONE);
-            mMotorGpio.setActiveType(Gpio.ACTIVE_HIGH);
-            // Configure as an output
-            mMotorGpio.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW);
-        } catch (IOException e) {
-            Log.e(TAG, "Error initializing GPIO: " + MOTOR_1_NEG, e);
-        }
-
+        mCandyMachine = new CandyMachine(MOTOR_1_NEG);
         mImgView = (ImageView) findViewById(R.id.image);
         mTextInfo = (TextView) findViewById(R.id.textInfo);
 
@@ -139,15 +130,15 @@ public class MainActivity extends Activity {
                         imgView.setImageResource(R.drawable.animation);
                         mAnimation = (AnimationDrawable) imgView.getDrawable();
                         mAnimation.start();
+                        updateStatus(getString(R.string.processing));
                         mProcessing = true;
                         takePhoto();
                         timer.start();
                     } else if (imgView.getDrawable().getConstantState().equals
                             (imgView.getContext().getDrawable(R.drawable.ic_thumb_up).getConstantState())) {
-                        try {
                             timer.cancel();
-                            mMotorGpio.setValue(true);
-                            new CountDownTimer(2000, 1000) {
+                            mCandyMachine.giveCandies(true);
+                            new CountDownTimer(1000, 1000) {
                                 public void onTick(long millisUntilFinished) {
 //                                    mTextInfo.setText("Candy countdown: " + millisUntilFinished / 1000);
                                 }
@@ -156,17 +147,9 @@ public class MainActivity extends Activity {
                                     mImgView.setImageResource(R.drawable.ic_start);
                                     updateStatus(getString(R.string.start_message));
                                     mProcessing = false;
-                                    try {
-                                        mMotorGpio.setValue(false);
-                                    } catch (IOException e) {
-                                        Log.e(TAG, "error toggling gpio off:", e);
-                                    }
+                                    mCandyMachine.giveCandies(false);
                                 }
                             }.start();
-                        } catch (IOException e) {
-                            Log.e(TAG, "error toggling gpio on:", e);
-                        }
-
                     }
                 }
                 return true;
@@ -183,12 +166,10 @@ public class MainActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
 
-        if (mMotorGpio != null) {
-            try {
-                mMotorGpio.close();
-            } catch (IOException e) {
-                Log.e(TAG, "Error closing GPIO", e);
-            }
+        try {
+            mCandyMachine.close();
+        } catch (Exception e) {
+            Log.e(TAG, "Error closing GPIO", e);
         }
 
         try {
@@ -223,7 +204,7 @@ public class MainActivity extends Activity {
             mTensorFlowLite = new Interpreter(TensorFlowHelper.loadModelFile(this, MODEL_FILE));
             mLabels = TensorFlowHelper.readLabels(this, LABELS_FILE);
         } catch (IOException e) {
-            Log.w(TAG, "Unable to initialize TensorFlow Lite.", e);
+            Log.e(TAG, "Unable to initialize TensorFlow Lite.", e);
         }
     }
 

@@ -16,10 +16,10 @@ NeuralCandy uses the  [TensorFlow Lite](https://github.com/tensorflow/tensorflow
   - [Explorer pHAT](https://www.adafruit.com/product/3018) or [L9110 Breakout Board](https://www.ebay.com/sch/i.html?_from=R40&_sacat=0&_nkw=L9110+5V+Fan+Motor+Module&_sop=15)
   - [7" Touchscreen Display](https://www.adafruit.com/product/2718)
   - [SmartiPi Case](https://www.adafruit.com/product/3576)
-  - [USB to TTL Serial Cable](https://www.adafruit.com/product/954) (optional)
-  - [Lens Adjustment Tool](https://www.adafruit.com/product/3518) (optional)
   - [16GB microSD card](https://www.amazon.com/gp/product/B010Q57SEE/ref=ox_sc_act_title_2?smid=ATVPDKIKX0DER&psc=1)
   - [Mini Candy Dispenser](https://www.amazon.com/gp/product/B00RM5UQP0/ref=ox_sc_act_title_1?smid=A25PA0SPA3UQ4X&psc=1)
+  - [USB to TTL Serial Cable](https://www.adafruit.com/product/954) (optional)
+  - [Lens Adjustment Tool](https://www.adafruit.com/product/3518) (optional)
 - Install Android Things on the Raspberry Pi 3 (flashing instructions [here](https://developer.android.com/things/hardware/raspberrypi.html))
 
 ### Why do I need a motor driver?
@@ -28,6 +28,7 @@ The Raspberry Pi's GPIO ports can only supply a few mA of current (16mA max). At
 ![](/images/pHAT_Motor.png)
 
 ## Flow of control by time ordering
+The sequence diagram below shows the passing of actions to visualize dynamic behaviour in the context of the user interaction with the application.
 ![](/images/sequence_diagram.gif)
 
 ## Implementation classes

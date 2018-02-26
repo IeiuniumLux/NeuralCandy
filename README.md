@@ -28,7 +28,7 @@ The Raspberry Pi's GPIO ports can only supply a few mA of current (16mA max). At
 ![](/images/pHAT_Motor.png)
 
 ## Flow of control by time ordering
-The sequence diagram below shows the passing of actions to visualize dynamic behaviour in the context of the user interaction with the application.
+The sequence diagram below shows the passing of actions as they unfold by the user interaction with the application.
 ![](/images/sequence_diagram.gif)
 
 ## Implementation classes

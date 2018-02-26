@@ -1,0 +1,84 @@
+@startuml
+
+package "io.androidthings.neuralcandy" #DDDDDD {
+MainActivity --> CameraHandler
+MainActivity --> ImagePreprocessor
+MainActivity --> CandyMachine
+MainActivity o..> Recognition
+TensorFlowHelper *-- Recognition
+MainActivity ..> TensorFlowHelper
+}
+
+class MainActivity {
+-mAnimation : AnimationDrawable
+-mImgView : ImageView
+-mTextInfo : TextView
+-mProcessing : boolean
+-mTensorFlowLite : Interpreter
+-mLabels : List<String>
+-mCameraHandler : CameraHandler
+-mImagePreprocessor : ImagePreprocessor
+-mCurrentTarget : String
+-mCandyMachine : CandyMachine
+#onCreate()
+#onDestroy()
+-randomThing()
+-updateStatus()
+-initClassifier()
+-destroyClassifier()
+-onPhotoCaptured()
+-onClassificationComplete()
+-doIdentification()
+-closeCamera()
+-takePhoto()
+}
+
+class Recognition {
+-id : String
+-title : String
+-confidence : Float
++getId()
++getTitle()
++getConfidence()
++toString()
+}
+
+class TensorFlowHelper {
++loadModelFile()
++readLabels()
++getBestResults()
++convertBitmapToByteBuffer()
+}
+
+class CameraHandler {
+-mCameraDevice : CameraDevice
+-mCaptureSession : CameraCaptureSession
+-initialized : boolean
+-mImageReader : ImageReader
++getInstance()
++initializeCamera()
++takePicture()
+-triggerImageCapture()
+-closeCaptureSession()
++shutDown()
++dumpFormatInfo()
+}
+
+class CandyMachine {
+-mMotorGpio : Gpio
+-createGpio()
++giveCandies()
+-closeGpio()
+-setGpioValue()
++close()
+}
+
+class ImagePreprocessor {
+-rgbFrameBitmap : Bitmap
+-croppedBitmap : Bitmap
++preprocessImage()
+-saveBitmap()
+-cropAndRescaleBitmap()
+}
+
+@enduml

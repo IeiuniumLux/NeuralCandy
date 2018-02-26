@@ -46,7 +46,7 @@ public class MainActivity extends Activity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     public static final List<String> THINGS = Arrays.asList("TRILOBITE", "AXOLOTL", "TRICERATOPS",
-            "GOLDFISH", "PORCUPINE", "ZEBRA", "STARFISH", "PLATYPUS", "TOUCAN", "TERRAPIN", "LOBSTER", "DAISY");
+            "GOLDFISH", "PORCUPINE", "ZEBRA", "STARFISH", "PLATYPUS", "TOUCAN", "TERRAPIN", "CHITON", "DAISY");
 
     /**
      * Camera image capture size
@@ -118,7 +118,7 @@ public class MainActivity extends Activity {
                     if ((imgView.getDrawable().getConstantState().equals
                             (imgView.getContext().getDrawable(R.drawable.ic_start).getConstantState())) || (imgView.getDrawable().getConstantState().equals
                             (imgView.getContext().getDrawable(R.drawable.ic_sorry).getConstantState()))) {
-                        mCurrentTarget = randomAnimal();
+                        mCurrentTarget = randomThing();
                         imgView.setImageResource(R.drawable.ic_camera);
                         updateStatus(getString(R.string.request, mCurrentTarget));
                         timer.start();
@@ -180,7 +180,7 @@ public class MainActivity extends Activity {
         }
     }
 
-    private String randomAnimal() {
+    private String randomThing() {
         String newLabel;
         Random random = new Random();
         do {

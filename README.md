@@ -27,9 +27,10 @@ The Raspberry Pi's GPIO ports can only supply a few mA of current (16mA max). At
 
 ![](/images/pHAT_Motor.png)
 
-## Implementation
+## Flow of control by time ordering
 ![](/images/sequence_diagram.gif)
 
+## Implementation classes
 This is the implementation level class diagram which shows the classes involved in the NeuroCandy app.
 ![](/images/class_diagram.gif)
 

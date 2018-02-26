@@ -1,0 +1,33 @@
+@startuml
+hide footbox
+
+actor User
+
+User -> Display: tap on display
+activate Display
+Display --> User: request random thing
+User -> Camera: show target to camera
+Display --> Display: 45sec
+note right: countdown
+User -> Display: tap on display
+Display -> Camera: take photo
+activate Camera
+Camera -> TensorFlow: do identification
+deactivate Camera
+activate TensorFlow
+alt successful match
+TensorFlow -> Display: tap to retrieve candies
+deactivate TensorFlow
+Display --> Display: 45sec
+note right: countdown
+User -> Display: tap on display
+Display -> CandyMachine: release candies
+activate CandyMachine
+CandyMachine --> Display: back to start
+deactivate CandyMachine
+else cannot recognize
+TensorFlow --> Display: tap to try again
+destroy TensorFlow
+deactivate Display
+end
+@enduml

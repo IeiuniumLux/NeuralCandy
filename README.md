@@ -25,7 +25,7 @@ NeuralCandy uses the  [TensorFlow Lite](https://github.com/tensorflow/tensorflow
 ### Why do I need a motor driver?
 The Raspberry Pi's GPIO ports can only supply a few mA of current (16mA max). Attempting to draw more than this will damage the Pi. Motors typically require at least 400mA to start spinning (although they draw far less after startup).  Motor drivers are often H-Bridge circuits, capable of driving a motor forwards or backwards. The Explorer pHAT has a dual H-Bridge and circuitry that makes the controlling of the motor easier.
 
-![](https://github.com/IeiuniumLux/NeuralCandy/blob/master/app/assets/class_diagram.gif)
+![](/app/assets/class_diagram.gif)
 
 ## References
 - https://github.com/googlecodelabs/androidthings-imageclassifier

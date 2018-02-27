@@ -29,17 +29,17 @@ NeuralCandy uses the  [TensorFlow Lite](https://github.com/tensorflow/tensorflow
 ### Why do I need a motor driver?
 The Raspberry Pi's GPIO ports can only supply a few mA of current (16mA max). Attempting to draw more than this will damage the Pi. Motors typically require at least 400mA to start spinning (although they draw far less after startup).  Motor drivers are often H-Bridge circuits, capable of driving a motor forwards or backwards. The Explorer pHAT has a dual H-Bridge and circuitry that makes the controlling of the motor easier.
 
-![](/NeuralCandy/images/pHAT_Motor.png)
+![motor](/images/pHAT_Motor.png)
 
 > Notice that under this configuration, the motor will be powered by the same power supply powering the Raspberry Pi.  Therefore, the AAA batteries are not longer requied to be installed in the candy dispenser.
 
 ## Flow of control by time ordering
 The sequence diagram below shows the passing of actions as they unfold by the user interaction with the application.
-![](/NeuralCandy/images/sequence_diagram.gif)
+![sequence](/images/sequence_diagram.gif)
 
 ## Implementation classes
 This is the implementation level class diagram which shows the classes involved in the NeuroCandy app.
-![](/NeuralCandy/images/class_diagram.gif)
+![classes](/images/class_diagram.gif)
 
 ## References
 - https://github.com/googlecodelabs/androidthings-imageclassifier

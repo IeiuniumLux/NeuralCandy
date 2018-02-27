@@ -1,6 +1,6 @@
 # NeuralCandy
 
-The NeuralCandy project combines image classifier and sugar highs in one delicious [Android Things](https://developer.android.com/things/get-started/index.html) project. The application asks for a random image to be placed in front of the [camera module](https://www.raspberrypi.org/products/camera-module-v2/) and if it matches the request; then the motor of the candy dispenser is activated to release the reward.
+NeuralCandy combines image classifier and sugar highs in one delicious [Android Things](https://developer.android.com/things/get-started/index.html) project. The application asks for a random image to be placed in front of the [camera module](https://www.raspberrypi.org/products/camera-module-v2/) and if it matches the request; then the motor of the candy dispenser is activated to release the reward.
 
 NeuralCandy uses the  [TensorFlow Lite](https://github.com/tensorflow/tensorflow/tree/master/tensorflow/contrib/lite#tensorflow-lite) inference library for Android to locally classify the captured image against the pre-trained [ImageNet](http://image-net.org/) model. This model is good at recognizing categories that it was trained with. You can use a smartphone to search on Google for the requested target image and put it in front of the Pi camera. The [Raspberry Pi 3 model B](https://developer.android.com/things/hardware/raspberrypi.html) will handle the image processing and the motor for the candy release.
 

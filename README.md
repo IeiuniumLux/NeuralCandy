@@ -31,6 +31,8 @@ The Raspberry Pi's GPIO ports can only supply a few mA of current (16mA max). At
 
 ![](/images/pHAT_Motor.png)
 
+> Notice that under this configuration, the motor will be powered by the same power supply powering the Raspberry Pi.  Therefore, batteries are not longer requied to be installed in the candy dispenser.
+
 ## Flow of control by time ordering
 The sequence diagram below shows the passing of actions as they unfold by the user interaction with the application.
 ![](/images/sequence_diagram.gif)

@@ -7,14 +7,10 @@ import android.media.ImageReader;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.google.android.things.device.ScreenManager;
-import com.google.android.things.pio.PeripheralManagerService;
 
 import org.tensorflow.lite.Interpreter;
 
@@ -84,14 +80,6 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        ScreenManager screenManager = new ScreenManager(Display.DEFAULT_DISPLAY);
-        screenManager.setBrightnessMode(ScreenManager.BRIGHTNESS_MODE_MANUAL);
-        screenManager.setBrightness(255); //Max it out.
-//        screenManager.lockRotation(ScreenManager.ROTATION_0);
-
-        PeripheralManagerService pioService = new PeripheralManagerService();
-//        Log.d(TAG, "Available GPIO: " + pioService.getGpioList());
 
         mCandyMachine = new CandyMachine(MOTOR_1_NEG);
         mImgView = (ImageView) findViewById(R.id.image);

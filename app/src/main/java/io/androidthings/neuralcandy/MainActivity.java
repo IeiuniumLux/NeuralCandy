@@ -42,7 +42,8 @@ public class MainActivity extends Activity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     public static final List<String> THINGS = Arrays.asList("TRILOBITE", "AXOLOTL", "TRICERATOPS",
-            "GOLDFISH", "PORCUPINE", "ZEBRA", "STARFISH", "PLATYPUS", "TOUCAN", "TERRAPIN", "CHITON", "DAISY");
+            "GOLDFISH", "PORCUPINE", "HOURGLASS", "ZEBRA", "STARFISH", "PLATYPUS", "TOUCAN", "TERRAPIN",
+            "CHITON", "DAISY", "BULLFROG", "AGAMA");
 
     /**
      * Camera image capture size
@@ -75,6 +76,8 @@ public class MainActivity extends Activity {
     private ImagePreprocessor mImagePreprocessor;
     private String mCurrentTarget;
     private CandyMachine mCandyMachine;
+
+    private static int index = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,12 +172,15 @@ public class MainActivity extends Activity {
     }
 
     private String randomThing() {
-        String newLabel;
-        Random random = new Random();
-        do {
-            int idx = random.nextInt(THINGS.size());
-            newLabel = THINGS.get(idx);
-        } while (newLabel == mCurrentTarget);
+//        String newLabel;
+//        Random random = new Random();
+//        do {
+//            int idx = random.nextInt(THINGS.size());
+//            newLabel = THINGS.get(idx);
+//        } while (newLabel == mCurrentTarget);
+
+        String newLabel = THINGS.get(index);
+        index = (index < THINGS.size()) ? index + 1 : 0;
 
         return newLabel;
     }

@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
 
     lintOptions {
         abortOnError false
@@ -9,8 +9,8 @@ android {
 
     defaultConfig {
         applicationId "io.androidthings.neuralcandy"
-        minSdkVersion 26
-        targetSdkVersion 26
+        minSdkVersion 27
+        targetSdkVersion 27
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -39,7 +39,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-    implementation 'org.tensorflow:tensorflow-lite:0.1.1'
-    compile 'com.android.support:support-annotations:25.4.0'
-    compileOnly 'com.google.android.things:androidthings:+'
+    implementation 'org.tensorflow:tensorflow-lite:+'
+    implementation 'com.android.support:support-annotations:27.1.0'
+    compileOnly 'com.google.android.things:androidthings:0.7-devpreview'
 }

@@ -23,20 +23,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-/**
- * Android Things activity.
- * <p>
- * Android Things peripheral APIs are accessible through the class PeripheralManagerService.
- * For example, the snippet below will open a GPIO pin and set it to HIGH:
- * <p>
- * <pre>{@code
- * PeripheralManagerService service = new PeripheralManagerService();
- * mLedGpio = service.openGpio("BCM6");
- * mLedGpio.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW);
- * mLedGpio.setValue(true);
- * }</pre>
- * <p>
- */
+
 public class MainActivity extends Activity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -118,12 +105,12 @@ public class MainActivity extends Activity {
                         if (timer != null)
                             timer.cancel();
 
+                        takePhoto();
                         imgView.setImageResource(R.drawable.animation);
                         mAnimation = (AnimationDrawable) imgView.getDrawable();
                         mAnimation.start();
                         updateStatus(getString(R.string.processing));
                         mProcessing = true;
-                        takePhoto();
                         timer.start();
                     } else if (imgView.getDrawable().getConstantState().equals
                             (imgView.getContext().getDrawable(R.drawable.ic_thumb_up).getConstantState())) {
@@ -212,9 +199,16 @@ public class MainActivity extends Activity {
     /**
      * Image capture process complete
      */
-    private void onPhotoCaptured(Bitmap bitmap) {
-//        mImgView.setImageBitmap(bitmap);
-        doIdentification(bitmap);
+    private void onPhotoCaptured(final Bitmap bitmap) {
+        new CountDownTimer(2000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                mImgView.setImageBitmap(bitmap);
+            }
+
+            public void onFinish() {
+                doIdentification(bitmap);
+            }
+        }.start();
     }
 
     /**

@@ -41,5 +41,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     implementation 'org.tensorflow:tensorflow-lite:+'
     implementation 'com.android.support:support-annotations:27.1.0'
-    compileOnly 'com.google.android.things:androidthings:0.7-devpreview'
+    compileOnly 'com.google.android.things:androidthings:0.8-devpreview'
 }

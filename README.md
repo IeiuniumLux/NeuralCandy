@@ -6,9 +6,7 @@ NeuralCandy uses the  [TensorFlow Lite](https://github.com/tensorflow/tensorflow
 
 > Note that the Android Things project is still in the early-adopters stage and it may still have some stability issues. NeuralCandy is built using the [preview 7 release](https://developer.android.com/things/preview/releases.html#preview-7); which requires to reboot the Raspberry Pi after installing the app because the camera permission is not granted until the next device reboot. Another limitation in this preview release is the maximum resolution; which is only [640*480](https://issuetracker.google.com/issues/37134104). Hopefully, the next release of Android Things will support higher resolutions since the Raspberry Pi camera V2.1 is capable of taking 8MP images / 1080p videos at 30fps.
 
-## Screencast
-
-![demo](/images/NeuralCandy.gif)
+[![demo](/images/NeuralCandy.gif)](https://youtu.be/ws3-Nl8_1qU)
 
 ## What you'll need
 

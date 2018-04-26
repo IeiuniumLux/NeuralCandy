@@ -30,7 +30,7 @@ public class MainActivity extends Activity {
 
     public static final List<String> THINGS = Arrays.asList("TRILOBITE", "AXOLOTL", "TRICERATOPS",
             "GOLDFISH", "PORCUPINE", "HOURGLASS", "ZEBRA", "STARFISH", "PLATYPUS", "TOUCAN", "TERRAPIN",
-            "CHITON", "DAISY", "BULLFROG", "AGAMA");
+            "CHITON", "DAISY", "BULLFROG", "AGAMA", "MANTIS", "SPACE SHUTTLE");
 
     /**
      * Camera image capture size
